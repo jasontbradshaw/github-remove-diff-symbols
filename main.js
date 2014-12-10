@@ -15,12 +15,16 @@ var trimDiffLines = function () {
   ].join(', '));
 
   Array.prototype.forEach.call(lines, function (line) {
+    // only check the first two nodes, since those are the only ones that can
+    // match the conditions we're looking for.
+    var nodes = Array.prototype.slice.call(line.childNodes, 0, 2);
+
     // trim a matching leading character from text nodes of diff lines. we trim
     // both lines of context _and_ diff lines in order to ensure that the diff
     // lines match up with the context lines.
-    Array.prototype.forEach.call(line.childNodes, function (node) {
+    Array.prototype.forEach.call(nodes, function (node) {
       if (node.nodeType === Node.TEXT_NODE) {
-        // if the node begins with a `+`, `-`, or single leading space, trim it
+        // if the node is a `+`, `-`, or single leading space, trim it
         if (/^[-+\s]/.test(node.textContent)) {
           node.textContent = node.textContent.slice(1);
 
